@@ -1,0 +1,30 @@
+static final String createApplicant = "INSERT INTO APPLICANT (a_hashedid, a_username, a_fname, a_lname, a_dob) 
+                                        VALUES ('?D(G+KbPeShVmYq3', 'Rockstar Programmer', 'Test', 'Testerson', SYSDATE)";
+
+static final String updateAppProfile = "UPDATE APPLICANT
+                                        SET a_tech_yearsofexp = 4,
+                                        a_tech_problemsolving = 7,
+                                        a_tech_degree = 2,
+                                        a_busi_jobtype = 4,
+                                        a_busi_growthopp = 8,
+                                        a_busi_companysize = 10,
+                                        a_cult_consistency = 8,
+                                        a_cult_communication = 9,
+                                        a_cult_leadership = 7
+                                        WHERE a_hashedid = '?D(G+KbPeShVmYq3';";
+
+static final String updateAppInfo = "UPDATE APPLICANT
+                                    SET a_username = 'Dark Lord',
+                                    a_fname = 'Darth',
+                                    a_lname = 'Vader',
+                                    a_dob = SYSDATE
+                                    WHERE a_hashedid = '?D(G+KbPeShVmYq3';";
+
+static final String updateAppUsername = "UPDATE APPLICANT
+                                    SET a_username = 'Dark Lord'
+                                    WHERE a_hashedid = '?D(G+KbPeShVmYq3';";
+
+static final String updateAppName = "UPDATE APPLICANT
+                                    SET a_fname = 'Darth',
+                                    a_lname = 'Vader'
+                                    WHERE a_hashedid = '?D(G+KbPeShVmYq3';";
