@@ -3,6 +3,9 @@
 ### Database Virtual Box
 [Oracle Linux 7 + Oracle Database 19.3 Linux x86-64 + Oracle SQL Developer 19.1](https://www.oracle.com/database/technologies/databaseappdev-vm.html)<br/>
 ***
+### Java IDE
+[Eclipse IDE for Enterprise Java and Web Developers](https://www.eclipse.org/downloads/packages/release/2021-03/r/eclipse-ide-enterprise-java-and-web-developers)<br/>
+***
 ### JDBC
 [Java Database Connectivity](https://docs.oracle.com/javase/8/docs/api/java/sql/package-summary.html)<br/>
 ***
