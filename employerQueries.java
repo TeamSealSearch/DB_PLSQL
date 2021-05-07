@@ -25,7 +25,7 @@ static final String viewEmpInfo = "SELECT e_hashedid, e_companyname, e_username,
 
 static final String viewEmpProfile = "SELECT e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER WHERE e_hashedid = 'Xp2s5v8y/A?D(G+K';";
 
-static final String viewEmpJobListing = "SELECT e_resumepdf FROM EMPLOYER WHERE e_hashedid = 'Xp2s5v8y/A?D(G+K';";
+static final String viewEmpJobListing = "SELECT e_joblistingpdf FROM EMPLOYER WHERE e_hashedid = 'Xp2s5v8y/A?D(G+K';";
 
 static final String deleteEmpAccount = "DELETE FROM EMPLOYER WHERE e_hashedid = 'Xp2s5v8y/A?D(G+K';";
 
