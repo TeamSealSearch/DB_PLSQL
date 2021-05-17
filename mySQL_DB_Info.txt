@@ -1,0 +1,12 @@
+Command Line:
+    mysql -u pantheon -pe219e5c6e89640c99c848c343f179b3d -h dbserver.dev.4133948b-a3ac-4678-9fd5-1a227e5bf546.drush.in -P 13473 pantheon
+Host:
+    dbserver.dev.4133948b-a3ac-4678-9fd5-1a227e5bf546.drush.in
+Username:
+    pantheon
+Password:
+    e219e5c6e89640c99c848c343f179b3d
+Port:
+    13473
+DB Name:
+    pantheon
