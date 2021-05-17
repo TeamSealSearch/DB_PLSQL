@@ -15,4 +15,3 @@
 ***
 ### Pantheon
 [Sandbox Site](https://dashboard.pantheon.io/login)<br/>
-***
