@@ -1,12 +1,20 @@
 package test394;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Applicant {
 	
+	private ArrayList<String> dbInfo;
+	private ArrayList<String> profileRankings;
 	private String hashedID;
 	private String username;
 	private String fname;
@@ -20,6 +28,11 @@ public class Applicant {
 		this.lname = "Doe";
 		Calendar cal = Calendar.getInstance();
 		this.dob = new java.sql.Date(cal.getTimeInMillis());
+		this.dbInfo = new ArrayList<String>();
+		this.dbInfo.add("com.mysql.cj.jdbc.Driver");
+		this.dbInfo.add("jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+		this.dbInfo.add("kingSeal@sealsearch");
+		this.dbInfo.add("Password1");
 	}
 	
 	public Applicant(String hid, String un, String first, String last, Calendar dobCal) {
@@ -29,6 +42,86 @@ public class Applicant {
 		this.lname = last;
 		Calendar cal = dobCal;
 		this.dob = new java.sql.Date(cal.getTimeInMillis());
+		this.dbInfo = new ArrayList<String>();
+		this.dbInfo.add("com.mysql.cj.jdbc.Driver");
+		this.dbInfo.add("jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+		this.dbInfo.add("kingSeal@sealsearch");
+		this.dbInfo.add("Password1");
+	}
+	
+	public void createApplicant() throws ClassNotFoundException, SQLException {
+		Class.forName(dbInfo.get(0));
+		Connection con = DriverManager.getConnection(dbInfo.get(1), dbInfo.get(2), dbInfo.get(3));
+		PreparedStatement ps = con.prepareStatement("INSERT INTO APPLICANT (a_hashedid, a_username, a_fname, a_lname, a_dob) VALUES (?, ?, ?, ?, ?)");
+		ps.setString(1, this.hashedID);
+		ps.setString(2, this.username);
+		ps.setString(3, this.fname);
+		ps.setString(4, this.lname);
+		ps.setDate(5, this.dob);
+		int count = ps.executeUpdate();
+		System.out.println("Rows Affected By This Query = " + count);
+		con.close();
+		ps.close();
+	}
+	
+	public void uploadResume(String filepath) throws SQLException, IOException, ClassNotFoundException {
+		Class.forName(dbInfo.get(0));
+		String fp = filepath;
+    	File pdfFile = new File(fp);
+    	byte[] pdfData = new byte[(int) pdfFile.length()];
+    	DataInputStream dis = new DataInputStream(new FileInputStream(pdfFile));
+    	dis.readFully(pdfData);
+    	dis.close();
+    	Connection con = DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    	PreparedStatement ps = con.prepareStatement("UPDATE APPLICANT SET a_resumePDF = ? WHERE a_hashedID = ?;");
+    	ps.setBytes(1, pdfData);
+    	ps.setString(2, this.hashedID);
+    	ps.executeUpdate();
+    	int count = ps.executeUpdate();
+		System.out.println("Rows Affected By This Query = " + count);
+    	con.close();
+    	ps.close();
+	}
+	
+	public void retrieveResume() throws ClassNotFoundException, SQLException, IOException {
+		Class.forName(dbInfo.get(0));
+		Connection con = DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+		String selectPDF = "SELECT a_resumePDF FROM APPLICANT WHERE a_hashedID = ?;";
+    	PreparedStatement ps = con.prepareStatement(selectPDF);
+    	ps.setString(1, this.hashedID);
+    	ResultSet rs = ps.executeQuery();
+    	File file = new File("retrievePDFTest.png");
+    	FileOutputStream output = new FileOutputStream(file);
+    	System.out.println("Writing to file...");
+    	while (rs.next()) {
+    	    InputStream input = rs.getBlob("a_resumePDF").getBinaryStream();
+    	    byte[] buffer = new byte[999999999];
+    	    while (input.read(buffer) > 0) {
+    	        output.write(buffer);
+    	    }
+    	}
+    	System.out.println("File Saved Here: " + file.getAbsolutePath());
+    	output.close();
+    	ps.close();
+    	con.close();
+	}
+	
+	public void updateProfile (String[] rankings) throws ClassNotFoundException, SQLException {
+		Class.forName(dbInfo.get(0));
+		this.profileRankings = new ArrayList<String>();
+		for (int i = 0; i < rankings.length; i++) {
+			this.profileRankings.add(rankings[i]);
+		}
+		Connection con = DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+		PreparedStatement ps = con.prepareStatement("UPDATE APPLICANT SET a_tech_yearsofexp = ?, a_tech_problemsolving = ?, a_tech_degree = ?, a_busi_jobtype = ?, a_busi_growthopp = ?, a_busi_companysize = ?, a_cult_consistency = ?, a_cult_communication = ?, a_cult_leadership = ? WHERE a_hashedid = ?;");
+		for (int i = 0; i < this.profileRankings.size(); i++) {
+			ps.setString(i+1, this.profileRankings.get(i));
+		}
+		ps.setString(10, this.hashedID);
+		int count = ps.executeUpdate();
+		System.out.println("Rows Affected By This Query = " + count);
+    	con.close();
+    	ps.close();
 	}
 	
 	@Override
@@ -39,8 +132,32 @@ public class Applicant {
 		return sb.toString();
 	}
 	
-	public static void main(String[] args) {
+	public void setHashedID(String hid) {
+		this.hashedID = hid;
+	}
+	
+	public void setUsername(String un) {
+		this.username = un;
+	}
+	
+	public void setFname(String first) {
+		this.fname = first;
+	}
+	
+	public void setLname(String last) {
+		this.lname = last;
+	}
+	
+	public void setDOB(Calendar cal) {
+		this.dob = new java.sql.Date(cal.getTimeInMillis());
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 		Applicant app = new Applicant();
-		System.out.println(app.toString());
+		//String[] rankings = {"9", "8", "7", "6", "5", "4", "3", "2", "1"};
+		//app.createApplicant();
+		//app.uploadResume("C:/Users/Jeremy/Desktop/seal.pdf");
+		//app.updateProfile(rankings);
+		//app.retrieveResume();
 	}
 }
