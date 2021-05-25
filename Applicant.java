@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Applicant {
-
   private ArrayList<String> dbInfo;
   private ArrayList<String> profileRankings;
   private String hashedID;
@@ -136,7 +135,7 @@ public class Applicant {
     ps.close();
   }
 
-  public void getProfileRankings() throws ClassNotFoundException, SQLException {
+  public void updateRankings() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     this.profileRankings = new ArrayList<String>();
     Connection con =
@@ -154,6 +153,16 @@ public class Applicant {
     con.close();
     ps.close();
     rs.close();
+  }
+
+  public ResultSet browseJobs() throws ClassNotFoundException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps =
+        con.prepareStatement("SELECT * FROM employer WHERE e_jobListingPDF IS NOT NULL;");
+    ResultSet rs = ps.executeQuery();
+    return rs;
   }
 
   @Override
@@ -193,21 +202,67 @@ public class Applicant {
     this.dob = new java.sql.Date(cal.getTimeInMillis());
   }
 
+  public ArrayList<String> getDBInfo() {
+    return this.dbInfo;
+  }
+
+  public ArrayList<String> getProfileRankings() {
+    return this.profileRankings;
+  }
+
+  public String getHashedID() {
+    return this.hashedID;
+  }
+
+  public String getUsername() {
+    return this.username;
+  }
+
+  public String getFirstName() {
+    return this.fname;
+  }
+
+  public String getLastName() {
+    return this.lname;
+  }
+
+  public java.sql.Date getDOB() {
+    return this.dob;
+  }
+
   public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
     Applicant app = new Applicant();
-    app.setHashedID("987654");
-    app.setUsername("Method Man");
-    app.setFname("Clifford");
-    app.setLname("Smith");
+    app.updateRankings();
+    System.out.println(app.getHashedID() + "\n" + app.getUsername() + "\n" + app.getFirstName()
+        + " " + app.getLastName() + "\n" + app.getDOB().toString());
+    System.out.println(app.getDBInfo().toString() + "\n" + app.getProfileRankings().toString());
+    app.setHashedID("2129704133");
+    app.setUsername("Iron Man");
+    app.setFname("Tony");
+    app.setLname("Stark");
     Calendar cal = Calendar.getInstance();
-    cal.set(1971, 02, 02);
+    cal.set(1970, 04, 29);
     app.setDOB(cal);
-    String[] rankings = {"9", "8", "7", "6", "5", "4", "3", "2", "1"};
+    String[] rankings = {"99", "98", "97", "96", "95", "94", "93", "92", "91"};
     app.createApplicant();
-    app.uploadResume("C:/Users/Jeremy/Desktop/seal.pdf");
+    app.uploadResume("C:/Users/Jeremy/Desktop/avenger.pdf");
     app.updateProfile(rankings);
     app.retrieveResume();
-    app.getProfileRankings();
+    app.updateRankings();
     System.out.println(app.toString());
+    ResultSet test = app.browseJobs();
+    ArrayList<String> jobs = new ArrayList<String>();
+    while (test.next()) {
+      for (int i = 1; i <= test.getMetaData().getColumnCount(); i++) {
+        jobs.add(test.getString(i));
+      }
+    }
+    test.close();
+    System.out.println("Looping Thru Result Set Now");
+    for (int i = 0; i < jobs.size(); i++) {
+      if (i != 6) {
+        System.out.println(jobs.get(i));
+      }
+    }
   }
 }
