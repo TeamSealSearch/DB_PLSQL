@@ -11,9 +11,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
 
 public class Applicant {
   private ArrayList<String> dbInfo;
@@ -31,6 +34,16 @@ public class Applicant {
     this.lname = "Doe";
     Calendar cal = Calendar.getInstance();
     this.dob = new java.sql.Date(cal.getTimeInMillis());
+    this.dbInfo = new ArrayList<String>();
+    this.dbInfo.add("com.mysql.cj.jdbc.Driver");
+    this.dbInfo.add(
+        "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+    this.dbInfo.add("kingSeal@sealsearch");
+    this.dbInfo.add("Password1");
+  }
+
+  public Applicant(String hid) {
+    this.hashedID = hid;
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
@@ -99,12 +112,15 @@ public class Applicant {
         con.prepareStatement("SELECT a_resumePDF FROM APPLICANT WHERE a_hashedID = ?;");
     ps.setString(1, this.hashedID);
     ResultSet rs = ps.executeQuery();
-    File file = new File("retrievedAppResume.png");
+    Random random = new Random();
+    String ext = ".pdf";
+    String name = String.format("%s%s", System.currentTimeMillis(), random.nextInt(100000) + ext);
+    File file = new File(name);
     FileOutputStream output = new FileOutputStream(file);
     System.out.println("Writing to file...");
     while (rs.next()) {
       InputStream input = rs.getBlob("a_resumePDF").getBinaryStream();
-      byte[] buffer = new byte[999999999];
+      byte[] buffer = new byte[(int) rs.getBlob("a_resumePDF").length()];
       while (input.read(buffer) > 0) {
         output.write(buffer);
       }
@@ -133,6 +149,33 @@ public class Applicant {
     System.out.println("Rows Affected By updateProfile() Query = " + count);
     con.close();
     ps.close();
+  }
+
+  public void updateApplicant() throws ClassNotFoundException, ParseException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps = con.prepareStatement("SELECT * FROM APPLICANT WHERE a_hashedID = ?;");
+    ps.setString(1, this.hashedID);
+    ResultSet rs = ps.executeQuery();
+    ArrayList<String> appInfo = new ArrayList<String>();
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        appInfo.add(rs.getString(i));
+      }
+    }
+    this.hashedID = appInfo.get(0);
+    this.username = appInfo.get(1);
+    this.fname = appInfo.get(2);
+    this.lname = appInfo.get(3);
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Date parsed = sdf.parse(appInfo.get(4));
+    java.sql.Date sql = new java.sql.Date(parsed.getTime());
+    this.dob = sql;
+    this.profileRankings = new ArrayList<String>();
+    for (int i = 7; i < appInfo.size(); i++) {
+      this.profileRankings.add(appInfo.get(i));
+    }
   }
 
   public void updateRankings() throws ClassNotFoundException, SQLException {
@@ -230,25 +273,31 @@ public class Applicant {
     return this.dob;
   }
 
-  public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
+  public static void main(String[] args)
+      throws ClassNotFoundException, IOException, ParseException, SQLException {
     Applicant app = new Applicant();
     app.updateRankings();
     System.out.println(app.getHashedID() + "\n" + app.getUsername() + "\n" + app.getFirstName()
         + " " + app.getLastName() + "\n" + app.getDOB().toString());
     System.out.println(app.getDBInfo().toString() + "\n" + app.getProfileRankings().toString());
-    app.setHashedID("2129704133");
-    app.setUsername("Iron Man");
-    app.setFname("Tony");
-    app.setLname("Stark");
+    app = new Applicant("2129704133");
+    System.out.println("Before: " + app.hashedID + " " + app.username + " " + app.fname + " "
+        + app.lname + " " + app.profileRankings);
+    app.updateApplicant();
+    System.out.println("After: " + app.hashedID + " " + app.username + " " + app.fname + " "
+        + app.lname + " " + app.dob + " " + app.getProfileRankings().toString());
+    app.setHashedID("987654320");
+    app.setUsername("Captain America");
+    app.setFname("Steve");
+    app.setLname("Rogers");
     Calendar cal = Calendar.getInstance();
-    cal.set(1970, 04, 29);
+    cal.set(1918, 06, 04);
     app.setDOB(cal);
-    String[] rankings = {"99", "98", "97", "96", "95", "94", "93", "92", "91"};
+    String[] rankings = {"100", "101", "102", "103", "104", "105", "106", "107", "108"};
     app.createApplicant();
-    app.uploadResume("C:/Users/Jeremy/Desktop/avenger.pdf");
+    app.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
     app.updateProfile(rankings);
     app.retrieveResume();
-    app.updateRankings();
     System.out.println(app.toString());
     ResultSet test = app.browseJobs();
     ArrayList<String> jobs = new ArrayList<String>();
