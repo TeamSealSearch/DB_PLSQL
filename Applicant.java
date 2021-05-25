@@ -124,11 +124,31 @@ public class Applicant {
     	ps.close();
 	}
 	
+	public void getProfileRankings () throws ClassNotFoundException, SQLException {
+		Class.forName(dbInfo.get(0));
+		this.profileRankings = new ArrayList<String>();
+		Connection con = DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+		PreparedStatement ps = con.prepareStatement("SELECT a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_hashedid = ?;");
+		ps.setString(1, this.hashedID);
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+    		for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+    			this.profileRankings.add(rs.getString(i));
+    			}
+    		}
+		con.close();
+		ps.close();
+		rs.close();
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		sb.append("HashedID: " + this.hashedID + "\n" + "Username: " + this.username + "\n" + "First Name: " + this.fname + "\n" + "Last Name: " + this.lname + "\n" + "DOB: " + sdf.format(this.dob));
+		sb.append("HashedID: " + this.hashedID + "\n" + "Username: " + this.username + "\n" + "First Name: " + this.fname + "\n" + "Last Name: " + this.lname + "\n" + "DOB: " + sdf.format(this.dob) + "\n");
+		sb.append("Years Of Experience: " + this.profileRankings.get(0) + "\n" + "Problem Solving: " + this.profileRankings.get(1) + "\n" + "Degree: " + this.profileRankings.get(2) + "\n");
+		sb.append("Job Type: " + this.profileRankings.get(3) + "\n" + "Growth Opportunity: " + this.profileRankings.get(4) + "\n" + "Company Size: " + this.profileRankings.get(5) + "\n");
+		sb.append("Consistency: " + this.profileRankings.get(6) + "\n" + "Communication: " + this.profileRankings.get(7) + "\n" + "Leadership: " + this.profileRankings.get(8));
 		return sb.toString();
 	}
 	
@@ -153,11 +173,15 @@ public class Applicant {
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+		/*
 		Applicant app = new Applicant();
-		//String[] rankings = {"9", "8", "7", "6", "5", "4", "3", "2", "1"};
-		//app.createApplicant();
-		//app.uploadResume("C:/Users/Jeremy/Desktop/seal.pdf");
-		//app.updateProfile(rankings);
-		//app.retrieveResume();
+		String[] rankings = {"9", "8", "7", "6", "5", "4", "3", "2", "1"};
+		app.createApplicant();
+		app.uploadResume("C:/Users/Jeremy/Desktop/seal.pdf");
+		app.updateProfile(rankings);
+		app.retrieveResume();
+		app.getProfileRankings();
+		System.out.println(app.toString());
+		*/
 	}
 }
