@@ -175,6 +175,13 @@ public class Applicant {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 		/*
 		Applicant app = new Applicant();
+		app.setHashedID("987654");
+		app.setUsername("Method Man");
+		app.setFname("Clifford");
+		app.setLname("Smith");
+		Calendar cal = Calendar.getInstance();
+		cal.set(1971, 03, 02);
+		app.setDOB(cal);
 		String[] rankings = {"9", "8", "7", "6", "5", "4", "3", "2", "1"};
 		app.createApplicant();
 		app.uploadResume("C:/Users/Jeremy/Desktop/seal.pdf");
