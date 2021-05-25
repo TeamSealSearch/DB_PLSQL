@@ -59,12 +59,12 @@ public class Applicant {
 		ps.setString(4, this.lname);
 		ps.setDate(5, this.dob);
 		int count = ps.executeUpdate();
-		System.out.println("Rows Affected By This Query = " + count);
+		System.out.println("Rows Affected By createApplicant() Query = " + count);
 		con.close();
 		ps.close();
 	}
 	
-	public void uploadResume(String filepath) throws SQLException, IOException, ClassNotFoundException {
+	public void uploadResume(String filepath) throws ClassNotFoundException, IOException, SQLException {
 		Class.forName(dbInfo.get(0));
 		String fp = filepath;
     	File pdfFile = new File(fp);
@@ -76,21 +76,20 @@ public class Applicant {
     	PreparedStatement ps = con.prepareStatement("UPDATE APPLICANT SET a_resumePDF = ? WHERE a_hashedID = ?;");
     	ps.setBytes(1, pdfData);
     	ps.setString(2, this.hashedID);
-    	ps.executeUpdate();
     	int count = ps.executeUpdate();
-		System.out.println("Rows Affected By This Query = " + count);
+		System.out.println("Rows Affected By uploadResume() Query = " + count);
     	con.close();
     	ps.close();
 	}
 	
-	public void retrieveResume() throws ClassNotFoundException, SQLException, IOException {
+	public void retrieveResume() throws ClassNotFoundException, IOException, SQLException {
 		Class.forName(dbInfo.get(0));
 		Connection con = DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
 		String selectPDF = "SELECT a_resumePDF FROM APPLICANT WHERE a_hashedID = ?;";
     	PreparedStatement ps = con.prepareStatement(selectPDF);
     	ps.setString(1, this.hashedID);
     	ResultSet rs = ps.executeQuery();
-    	File file = new File("retrievePDFTest.png");
+    	File file = new File("retrievedAppResume.png");
     	FileOutputStream output = new FileOutputStream(file);
     	System.out.println("Writing to file...");
     	while (rs.next()) {
@@ -119,7 +118,7 @@ public class Applicant {
 		}
 		ps.setString(10, this.hashedID);
 		int count = ps.executeUpdate();
-		System.out.println("Rows Affected By This Query = " + count);
+		System.out.println("Rows Affected By updateProfile() Query = " + count);
     	con.close();
     	ps.close();
 	}
@@ -136,6 +135,7 @@ public class Applicant {
     			this.profileRankings.add(rs.getString(i));
     			}
     		}
+		System.out.println("Retrieved Rankings: " + this.profileRankings.toString());
 		con.close();
 		ps.close();
 		rs.close();
@@ -172,7 +172,7 @@ public class Applicant {
 		this.dob = new java.sql.Date(cal.getTimeInMillis());
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+	public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
 		/*
 		Applicant app = new Applicant();
 		app.setHashedID("987654");
