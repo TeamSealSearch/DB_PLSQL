@@ -208,8 +208,8 @@ public class Employer {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
-    PreparedStatement ps =
-        con.prepareStatement("SELECT * FROM APPLICANT WHERE a_resumePDF IS NOT NULL;");
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_resumePDF IS NOT NULL;");
     ResultSet rs = ps.executeQuery();
     return rs;
   }
@@ -293,13 +293,15 @@ public class Employer {
     emp.updateRankings();
     System.out.println(emp.getHashedID() + "\n" + emp.getCompanyName() + "\n" + emp.getUsername()
         + "\n" + emp.getFirstName() + " " + emp.getLastName() + "\n" + emp.getDOB().toString());
-    System.out.println(emp.getDBInfo().toString() + "\n" + emp.getProfileRankings().toString());
+    System.out
+        .println(emp.getDBInfo().toString() + "\n" + emp.getProfileRankings().toString() + "\n");
     emp = new Employer("Xp2s5v8y/A?D(G+K");
     System.out.println("Before: " + emp.hashedID + " " + emp.companyName + " " + emp.username + " "
         + emp.fname + " " + emp.lname + " " + emp.profileRankings);
     emp.updateEmployer();
-    System.out.println("After: " + emp.hashedID + " " + emp.companyName + " " + emp.username + " "
-        + emp.fname + " " + emp.lname + " " + emp.dob + " " + emp.getProfileRankings().toString());
+    System.out.println(
+        "After: " + emp.hashedID + " " + emp.companyName + " " + emp.username + " " + emp.fname
+            + " " + emp.lname + " " + emp.dob + " " + emp.getProfileRankings().toString() + "\n");
     emp.setHashedID("9^-*l#PWxi6}j,w");
     emp.setCompanyName("Reddit");
     emp.setUsername("CEO");
@@ -313,6 +315,18 @@ public class Employer {
     emp.uploadJobListing("C:/Users/Jeremy/Desktop/reddit.pdf");
     emp.updateProfile(rankings);
     emp.retrieveJobListing();
-    System.out.println(emp.toString());
+    System.out.println("\n" + emp.toString() + "\n");
+    ResultSet test = emp.browseApplicants();
+    ArrayList<String> applicants = new ArrayList<String>();
+    while (test.next()) {
+      for (int i = 1; i <= test.getMetaData().getColumnCount(); i++) {
+        applicants.add(test.getString(i));
+      }
+    }
+    test.close();
+    System.out.println("Looping Thru Applicant Result Set Now!");
+    for (int i = 0; i < applicants.size(); i++) {
+      System.out.println(applicants.get(i));
+    }
   }
 }
