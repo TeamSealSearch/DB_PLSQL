@@ -202,8 +202,8 @@ public class Applicant {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
-    PreparedStatement ps =
-        con.prepareStatement("SELECT * FROM employer WHERE e_jobListingPDF IS NOT NULL;");
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT e_hashedID, e_companyName, e_username, e_fname, e_lname, e_dob, e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER WHERE e_jobListingPDF IS NOT NULL;");
     ResultSet rs = ps.executeQuery();
     return rs;
   }
@@ -279,13 +279,14 @@ public class Applicant {
     app.updateRankings();
     System.out.println(app.getHashedID() + "\n" + app.getUsername() + "\n" + app.getFirstName()
         + " " + app.getLastName() + "\n" + app.getDOB().toString());
-    System.out.println(app.getDBInfo().toString() + "\n" + app.getProfileRankings().toString());
+    System.out
+        .println(app.getDBInfo().toString() + "\n" + app.getProfileRankings().toString() + "\n");
     app = new Applicant("2129704133");
     System.out.println("Before: " + app.hashedID + " " + app.username + " " + app.fname + " "
         + app.lname + " " + app.profileRankings);
     app.updateApplicant();
     System.out.println("After: " + app.hashedID + " " + app.username + " " + app.fname + " "
-        + app.lname + " " + app.dob + " " + app.getProfileRankings().toString());
+        + app.lname + " " + app.dob + " " + app.getProfileRankings().toString() + "\n");
     app.setHashedID("987654320");
     app.setUsername("Captain America");
     app.setFname("Steve");
@@ -298,7 +299,7 @@ public class Applicant {
     app.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
     app.updateProfile(rankings);
     app.retrieveResume();
-    System.out.println(app.toString());
+    System.out.println("\n" + app.toString() + "\n");
     ResultSet test = app.browseJobs();
     ArrayList<String> jobs = new ArrayList<String>();
     while (test.next()) {
@@ -307,11 +308,9 @@ public class Applicant {
       }
     }
     test.close();
-    System.out.println("Looping Thru Result Set Now");
+    System.out.println("Looping Thru Employer Result Set Now!");
     for (int i = 0; i < jobs.size(); i++) {
-      if (i != 6) {
-        System.out.println(jobs.get(i));
-      }
+      System.out.println(jobs.get(i));
     }
   }
 }
