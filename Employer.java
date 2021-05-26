@@ -83,7 +83,7 @@ public class Employer {
     ps.setString(5, this.lname);
     ps.setDate(6, this.dob);
     int count = ps.executeUpdate();
-    System.out.println("Rows Affected By createApplicant() Query = " + count);
+    System.out.println("Rows Affected By createEmployer() Query = " + count);
     con.close();
     ps.close();
   }
@@ -156,7 +156,7 @@ public class Employer {
     ps.close();
   }
 
-  public void updateApplicant() throws ClassNotFoundException, ParseException, SQLException {
+  public void updateEmployer() throws ClassNotFoundException, ParseException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
@@ -290,6 +290,29 @@ public class Employer {
   public static void main(String[] args)
       throws ClassNotFoundException, IOException, ParseException, SQLException {
     Employer emp = new Employer();
-
+    emp.updateRankings();
+    System.out.println(emp.getHashedID() + "\n" + emp.getCompanyName() + "\n" + emp.getUsername()
+        + "\n" + emp.getFirstName() + " " + emp.getLastName() + "\n" + emp.getDOB().toString());
+    System.out.println(emp.getDBInfo().toString() + "\n" + emp.getProfileRankings().toString());
+    emp = new Employer("Xp2s5v8y/A?D(G+K");
+    System.out.println("Before: " + emp.hashedID + " " + emp.companyName + " " + emp.username + " "
+        + emp.fname + " " + emp.lname + " " + emp.profileRankings);
+    emp.updateEmployer();
+    System.out.println("After: " + emp.hashedID + " " + emp.companyName + " " + emp.username + " "
+        + emp.fname + " " + emp.lname + " " + emp.dob + " " + emp.getProfileRankings().toString());
+    emp.setHashedID("9^-*l#PWxi6}j,w");
+    emp.setCompanyName("Reddit");
+    emp.setUsername("CEO");
+    emp.setFname("Steve");
+    emp.setLname("Huffman");
+    Calendar cal = Calendar.getInstance();
+    cal.set(1983, 10, 12);
+    emp.setDOB(cal);
+    String[] rankings = {"21", "22", "23", "24", "25", "26", "27", "28", "29"};
+    emp.createEmployer();
+    emp.uploadJobListing("C:/Users/Jeremy/Desktop/reddit.pdf");
+    emp.updateProfile(rankings);
+    emp.retrieveJobListing();
+    System.out.println(emp.toString());
   }
 }
