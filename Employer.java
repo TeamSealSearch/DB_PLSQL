@@ -308,7 +308,7 @@ public class Employer {
     Calendar cal = Calendar.getInstance();
     cal.set(1983, 10, 12);
     emp.setDOB(cal);
-    String[] rankings = {"21", "22", "23", "24", "25", "26", "27", "28", "29"};
+    String[] rankings = {"20", "21", "22", "23", "24", "25", "26", "27", "28"};
     emp.createEmployer();
     emp.uploadJobListing("C:/Users/Jeremy/Desktop/reddit.pdf");
     emp.updateProfile(rankings);
