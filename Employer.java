@@ -104,7 +104,7 @@ public class Employer {
     ps.setBytes(1, pdfData);
     ps.setString(2, this.hashedID);
     int count = ps.executeUpdate();
-    System.out.println("Rows Affected By uploadResume() Query = " + count);
+    System.out.println("Rows Affected By uploadJobListing() Query = " + count);
     con.close();
     ps.close();
   }
