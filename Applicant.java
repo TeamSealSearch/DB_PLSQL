@@ -303,31 +303,32 @@ public class Applicant {
     System.out.println(appDefault.getHashedID() + "\n" + appDefault.getUsername() + "\n"
         + appDefault.getFirstName() + " " + appDefault.getLastName() + "\n"
         + appDefault.getDOB().toString());
-    System.out.println(appDefault.getDBInfo().toString() + "\n"
-        + appDefault.getProfileRankings().toString() + "\n");
+    System.out.println(
+        appDefault.getDBInfo().toString() + "\n" + appDefault.getProfileRankings().toString() + "\n"
+            + appDefault.getFollowedEmps().toString() + "\n");
     Applicant appExists = new Applicant("2129704133");
-    String[] rankings1 = {"99", "98", "97", "96", "95", "94", "93", "92", "91"};
-    appExists.updateProfile(rankings1);
     System.out.println("Before: " + appExists.hashedID + " " + appExists.username + " "
-        + appExists.fname + " " + appExists.lname + " " + appExists.profileRankings);
+        + appExists.fname + " " + appExists.lname + " " + " " + appExists.dob + " "
+        + appExists.profileRankings + " " + appExists.followedEmps);
     appExists.updateApplicant();
     System.out.println("After: " + appExists.hashedID + " " + appExists.username + " "
         + appExists.fname + " " + appExists.lname + " " + appExists.dob + " "
-        + appExists.getProfileRankings().toString() + "\n");
-    appExists.setHashedID("987654320");
-    appExists.setUsername("Captain America");
-    appExists.setFname("Steve");
-    appExists.setLname("Rogers");
+        + appExists.profileRankings.toString() + " " + appExists.followedEmps + "\n");
+    Applicant appSetTest = new Applicant();
+    appSetTest.setHashedID("987654320");
+    appSetTest.setUsername("Captain America");
+    appSetTest.setFname("Steve");
+    appSetTest.setLname("Rogers");
     Calendar cal = Calendar.getInstance();
     cal.set(1918, 06, 04);
-    appExists.setDOB(cal);
+    appSetTest.setDOB(cal);
     String[] rankings2 = {"100", "101", "102", "103", "104", "105", "106", "107", "108"};
-    appExists.createApplicant();
-    appExists.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
-    appExists.updateProfile(rankings2);
-    appExists.retrieveResume();
-    System.out.println("\n" + appExists.toString() + "\n");
-    ResultSet test = appExists.browseJobs();
+    appSetTest.createApplicant();
+    appSetTest.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
+    appSetTest.updateProfile(rankings2);
+    appSetTest.retrieveResume();
+    System.out.println("\n" + appSetTest.toString() + "\n");
+    ResultSet test = appSetTest.browseJobs();
     ArrayList<String> jobs = new ArrayList<String>();
     while (test.next()) {
       for (int i = 1; i <= test.getMetaData().getColumnCount(); i++) {
@@ -339,9 +340,9 @@ public class Applicant {
     for (int i = 0; i < jobs.size(); i++) {
       System.out.println(jobs.get(i));
     }
-    appExists.followEmployer("9^-*l#PWxi6}j,w");
-    appExists.followEmployer("Xp2s5v8y/A?D(G+K");
-    appExists.followEmployer("123456");
-    System.out.println(appExists.toString());
+    appSetTest.followEmployer("9^-*l#PWxi6}j,w");
+    appSetTest.followEmployer("Xp2s5v8y/A?D(G+K");
+    appSetTest.followEmployer("123456");
+    System.out.println(appSetTest.toString());
   }
 }
