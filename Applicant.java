@@ -44,9 +44,9 @@ public class Applicant {
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
-    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    String[] tempRankings = {"1", "1", "1", "1", "1", "1", "1", "1", "1"};
     updateProfile(tempRankings);
-    followedEmps = new HashMap<>();
+    this.followedEmps = new HashMap<>();
   }
 
   public Applicant(String hid) throws ClassNotFoundException, SQLException {
@@ -58,9 +58,7 @@ public class Applicant {
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
-    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    updateProfile(tempRankings);
-    followedEmps = new HashMap<>();
+    this.followedEmps = new HashMap<>();
   }
 
   public Applicant(String hid, String un, String first, String last, Calendar dobCal)
@@ -78,9 +76,7 @@ public class Applicant {
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
-    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    updateProfile(tempRankings);
-    followedEmps = new HashMap<>();
+    this.followedEmps = new HashMap<>();
   }
 
   public void createApplicant() throws ClassNotFoundException, SQLException {
@@ -149,7 +145,6 @@ public class Applicant {
 
   public void updateProfile(String[] rankings) throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
-    this.profileRankings = new ArrayList<String>();
     for (int i = 0; i < rankings.length; i++) {
       this.profileRankings.add(rankings[i]);
     }
@@ -157,8 +152,8 @@ public class Applicant {
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps = con.prepareStatement(
         "UPDATE APPLICANT SET a_tech_yearsofexp = ?, a_tech_problemsolving = ?, a_tech_degree = ?, a_busi_jobtype = ?, a_busi_growthopp = ?, a_busi_companysize = ?, a_cult_consistency = ?, a_cult_communication = ?, a_cult_leadership = ? WHERE a_hashedid = ?;");
-    for (int i = 0; i < this.profileRankings.size(); i++) {
-      ps.setString(i + 1, this.profileRankings.get(i));
+    for (int i = 0; i < rankings.length; i++) {
+      ps.setString(i + 1, rankings[i]);
     }
     ps.setString(10, this.hashedID);
     int count = ps.executeUpdate();
@@ -303,32 +298,36 @@ public class Applicant {
 
   public static void main(String[] args)
       throws ClassNotFoundException, IOException, ParseException, SQLException {
-    Applicant app = new Applicant();
-    app.updateRankings();
-    System.out.println(app.getHashedID() + "\n" + app.getUsername() + "\n" + app.getFirstName()
-        + " " + app.getLastName() + "\n" + app.getDOB().toString());
-    System.out
-        .println(app.getDBInfo().toString() + "\n" + app.getProfileRankings().toString() + "\n");
-    app = new Applicant("2129704133");
-    System.out.println("Before: " + app.hashedID + " " + app.username + " " + app.fname + " "
-        + app.lname + " " + app.profileRankings);
-    app.updateApplicant();
-    System.out.println("After: " + app.hashedID + " " + app.username + " " + app.fname + " "
-        + app.lname + " " + app.dob + " " + app.getProfileRankings().toString() + "\n");
-    app.setHashedID("987654320");
-    app.setUsername("Captain America");
-    app.setFname("Steve");
-    app.setLname("Rogers");
+    Applicant appDefault = new Applicant();
+    appDefault.updateRankings();
+    System.out.println(appDefault.getHashedID() + "\n" + appDefault.getUsername() + "\n"
+        + appDefault.getFirstName() + " " + appDefault.getLastName() + "\n"
+        + appDefault.getDOB().toString());
+    System.out.println(appDefault.getDBInfo().toString() + "\n"
+        + appDefault.getProfileRankings().toString() + "\n");
+    Applicant appExists = new Applicant("2129704133");
+    String[] rankings1 = {"99", "98", "97", "96", "95", "94", "93", "92", "91"};
+    appExists.updateProfile(rankings1);
+    System.out.println("Before: " + appExists.hashedID + " " + appExists.username + " "
+        + appExists.fname + " " + appExists.lname + " " + appExists.profileRankings);
+    appExists.updateApplicant();
+    System.out.println("After: " + appExists.hashedID + " " + appExists.username + " "
+        + appExists.fname + " " + appExists.lname + " " + appExists.dob + " "
+        + appExists.getProfileRankings().toString() + "\n");
+    appExists.setHashedID("987654320");
+    appExists.setUsername("Captain America");
+    appExists.setFname("Steve");
+    appExists.setLname("Rogers");
     Calendar cal = Calendar.getInstance();
     cal.set(1918, 06, 04);
-    app.setDOB(cal);
-    String[] rankings = {"100", "101", "102", "103", "104", "105", "106", "107", "108"};
-    app.createApplicant();
-    app.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
-    app.updateProfile(rankings);
-    app.retrieveResume();
-    System.out.println("\n" + app.toString() + "\n");
-    ResultSet test = app.browseJobs();
+    appExists.setDOB(cal);
+    String[] rankings2 = {"100", "101", "102", "103", "104", "105", "106", "107", "108"};
+    appExists.createApplicant();
+    appExists.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
+    appExists.updateProfile(rankings2);
+    appExists.retrieveResume();
+    System.out.println("\n" + appExists.toString() + "\n");
+    ResultSet test = appExists.browseJobs();
     ArrayList<String> jobs = new ArrayList<String>();
     while (test.next()) {
       for (int i = 1; i <= test.getMetaData().getColumnCount(); i++) {
@@ -340,9 +339,9 @@ public class Applicant {
     for (int i = 0; i < jobs.size(); i++) {
       System.out.println(jobs.get(i));
     }
-    app.followEmployer("9^-*l#PWxi6}j,w");
-    app.followEmployer("Xp2s5v8y/A?D(G+K");
-    app.followEmployer("123456");
-    System.out.println(app.toString());
+    appExists.followEmployer("9^-*l#PWxi6}j,w");
+    appExists.followEmployer("Xp2s5v8y/A?D(G+K");
+    appExists.followEmployer("123456");
+    System.out.println(appExists.toString());
   }
 }
