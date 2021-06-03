@@ -16,18 +16,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Applicant {
   private ArrayList<String> dbInfo;
   private ArrayList<String> profileRankings;
+  private Map<String, Employer> followedEmps;
   private String hashedID;
   private String username;
   private String fname;
   private String lname;
   private java.sql.Date dob;
 
-  public Applicant() {
+  public Applicant() throws ClassNotFoundException, SQLException {
     this.hashedID = "123456";
     this.username = "Test";
     this.fname = "John";
@@ -40,9 +43,13 @@ public class Applicant {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
+    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    updateProfile(tempRankings);
+    followedEmps = new HashMap<>();
   }
 
-  public Applicant(String hid) {
+  public Applicant(String hid) throws ClassNotFoundException, SQLException {
     this.hashedID = hid;
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
@@ -50,9 +57,14 @@ public class Applicant {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
+    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    updateProfile(tempRankings);
+    followedEmps = new HashMap<>();
   }
 
-  public Applicant(String hid, String un, String first, String last, Calendar dobCal) {
+  public Applicant(String hid, String un, String first, String last, Calendar dobCal)
+      throws ClassNotFoundException, SQLException {
     this.hashedID = hid;
     this.username = un;
     this.fname = first;
@@ -65,6 +77,10 @@ public class Applicant {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
+    String[] tempRankings = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    updateProfile(tempRankings);
+    followedEmps = new HashMap<>();
   }
 
   public void createApplicant() throws ClassNotFoundException, SQLException {
@@ -208,6 +224,13 @@ public class Applicant {
     return rs;
   }
 
+  public void followEmployer(String e_hid)
+      throws ClassNotFoundException, ParseException, SQLException {
+    Employer emp = new Employer(e_hid);
+    emp.updateEmployer();
+    followedEmps.put(emp.getHashedID(), emp);
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -221,7 +244,8 @@ public class Applicant {
         + this.profileRankings.get(4) + "\n" + "Company Size: " + this.profileRankings.get(5)
         + "\n");
     sb.append("Consistency: " + this.profileRankings.get(6) + "\n" + "Communication: "
-        + this.profileRankings.get(7) + "\n" + "Leadership: " + this.profileRankings.get(8));
+        + this.profileRankings.get(7) + "\n" + "Leadership: " + this.profileRankings.get(8) + "\n");
+    sb.append("Followed Employers: " + this.followedEmps.toString());
     return sb.toString();
   }
 
@@ -251,6 +275,10 @@ public class Applicant {
 
   public ArrayList<String> getProfileRankings() {
     return this.profileRankings;
+  }
+
+  public Map<String, Employer> getFollowedEmps() {
+    return this.followedEmps;
   }
 
   public String getHashedID() {
@@ -312,5 +340,9 @@ public class Applicant {
     for (int i = 0; i < jobs.size(); i++) {
       System.out.println(jobs.get(i));
     }
+    app.followEmployer("9^-*l#PWxi6}j,w");
+    app.followEmployer("Xp2s5v8y/A?D(G+K");
+    app.followEmployer("123456");
+    System.out.println(app.toString());
   }
 }
