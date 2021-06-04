@@ -149,12 +149,34 @@ public class Administrator {
     con.close();
   }
 
+  public ResultSet viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_hashedID = ?;");
+    ps.setString(1, a_hid);
+    ResultSet rs = ps.executeQuery();
+    return rs;
+  }
+
   public ResultSet browseApplicants() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps = con.prepareStatement(
         "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT;");
+    ResultSet rs = ps.executeQuery();
+    return rs;
+  }
+
+  public ResultSet viewEmployer(String e_hid) throws ClassNotFoundException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT e_hashedID, e_companyName, e_username, e_fname, e_lname, e_dob, e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER WHERE e_hashedID = ?;");
+    ps.setString(1, e_hid);
     ResultSet rs = ps.executeQuery();
     return rs;
   }
@@ -254,7 +276,7 @@ public class Administrator {
     admin.createAdmin();
     Calendar cal = Calendar.getInstance();
     admin.createApplicant("aca1234", "Generico", "Bob", "Stevens", cal);
-    ResultSet test1 = admin.browseApplicants();
+    ResultSet test1 = admin.viewApplicant("aca1234");
     ArrayList<String> applicants = new ArrayList<String>();
     while (test1.next()) {
       for (int i = 1; i <= test1.getMetaData().getColumnCount(); i++) {
@@ -267,8 +289,7 @@ public class Administrator {
       System.out.println(applicants.get(i));
     }
     admin.createEmployer("ace0001", "Overwatch", "Tigole", "Jeff", "Kaplan", cal);
-    admin.browseEmployers();
-    ResultSet test2 = admin.browseEmployers();
+    ResultSet test2 = admin.viewEmployer("ace0001");
     ArrayList<String> jobs = new ArrayList<String>();
     while (test2.next()) {
       for (int i = 1; i <= test2.getMetaData().getColumnCount(); i++) {
