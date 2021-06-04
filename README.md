@@ -10,8 +10,5 @@
 ### JDBC
 [Java Database Connectivity](https://docs.oracle.com/javase/8/docs/api/java/sql/package-summary.html)<br/>
 ***
-### Drupal
-[Open Source CMS](https://www.drupal.org/)<br/>
-***
 ### Java IDE
 [Eclipse IDE for Enterprise Java and Web Developers](https://www.eclipse.org/downloads/packages/release/2021-03/r/eclipse-ide-enterprise-java-and-web-developers)<br/>
