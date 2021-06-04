@@ -222,14 +222,40 @@ public class Applicant {
     return rs;
   }
 
-  public ResultSet browseJobs() throws ClassNotFoundException, SQLException {
+  public JSONArray browseJobs() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps = con.prepareStatement(
         "SELECT e_hashedID, e_companyName, e_username, e_fname, e_lname, e_dob, e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER WHERE e_jobListingPDF IS NOT NULL;");
     ResultSet rs = ps.executeQuery();
-    return rs;
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        empObject = new JSONObject();
+        ArrayList<String> ranks = new ArrayList<String>();
+        empObject.put("HID", rs.getString(i));
+        empObject.put("CompanyName", rs.getString(i + 1));
+        empObject.put("Username", rs.getString(i + 2));
+        empObject.put("FirstName", rs.getString(i + 3));
+        empObject.put("LastName", rs.getString(i + 4));
+        empObject.put("DOB", rs.getString(i + 5));
+        ranks.add(rs.getString(i + 6));
+        ranks.add(rs.getString(i + 7));
+        ranks.add(rs.getString(i + 8));
+        ranks.add(rs.getString(i + 9));
+        ranks.add(rs.getString(i + 10));
+        ranks.add(rs.getString(i + 11));
+        ranks.add(rs.getString(i + 12));
+        ranks.add(rs.getString(i + 13));
+        ranks.add(rs.getString(i + 14));
+        empObject.put("Rankings", ranks.toString());
+        fl.put(empObject);
+        i += 15;
+      }
+    }
+    return fl;
   }
 
   public void followEmployer(String e_hid)
@@ -366,22 +392,16 @@ public class Applicant {
     appSetTest.updateProfile(rankings2);
     appSetTest.retrieveResume();
     System.out.println("\n" + appSetTest.toString() + "\n");
-    ResultSet test = appSetTest.browseJobs();
-    ArrayList<String> jobs = new ArrayList<String>();
-    while (test.next()) {
-      for (int i = 1; i <= test.getMetaData().getColumnCount(); i++) {
-        jobs.add(test.getString(i));
-      }
+    JSONArray test = appSetTest.browseJobs();
+    for (int i = 0; i < test.length(); i++) {
+      System.out.println(test.get(i).toString());
     }
-    test.close();
-    System.out.println("Looping Thru Employer Result Set Now!");
-    for (int i = 0; i < jobs.size(); i++) {
-      System.out.println(jobs.get(i));
-    }
+    System.out.println("\n");
     appSetTest.followEmployer("9^-*l#PWxi6}j,w");
     appSetTest.followEmployer("Xp2s5v8y/A?D(G+K");
     appSetTest.followEmployer("123456");
     appSetTest.updateFollowedList();
+    System.out.println("\n");
     System.out.println(appSetTest.toString());
   }
 }
