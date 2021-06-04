@@ -184,7 +184,7 @@ public class Applicant {
     java.sql.Date sql = new java.sql.Date(parsed.getTime());
     this.dob = sql;
     this.profileRankings = new ArrayList<String>();
-    for (int i = 7; i < appInfo.size(); i++) {
+    for (int i = 7; i < appInfo.size() - 1; i++) {
       this.profileRankings.add(appInfo.get(i));
     }
   }
@@ -235,6 +235,23 @@ public class Applicant {
     Employer emp = new Employer(e_hid);
     emp.updateEmployer();
     followedEmps.put(emp.getHashedID(), emp);
+  }
+
+  public void updateFollowedList() throws ClassNotFoundException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    StringBuilder fe = new StringBuilder();
+    PreparedStatement ps =
+        con.prepareStatement("UPDATE APPLICANT SET a_followedEmployers = ? WHERE a_hashedID = ?;");
+    for (Employer value : this.followedEmps.values()) {
+      fe.append(value.getHashedID() + " , ");
+    }
+    fe.delete(fe.length() - 3, fe.length());
+    ps.setString(1, fe.toString());
+    ps.setString(2, this.hashedID);
+    int count = ps.executeUpdate();
+    System.out.println("Rows Affected By updateFollowedList() Query = " + count);
   }
 
   @Override
@@ -354,6 +371,7 @@ public class Applicant {
     appSetTest.followEmployer("9^-*l#PWxi6}j,w");
     appSetTest.followEmployer("Xp2s5v8y/A?D(G+K");
     appSetTest.followEmployer("123456");
+    appSetTest.updateFollowedList();
     System.out.println(appSetTest.toString());
   }
 }
