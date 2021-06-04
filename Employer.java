@@ -211,7 +211,7 @@ public class Employer {
     rs.close();
   }
 
-  public JSONArray viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
+  public JSONObject viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
@@ -219,17 +219,16 @@ public class Employer {
         "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_hashedID = ?;");
     ps.setString(1, a_hid);
     ResultSet rs = ps.executeQuery();
-    JSONArray fl = new JSONArray();
-    JSONObject empObject;
+    JSONObject empObject = null;
     while (rs.next()) {
       for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
         empObject = new JSONObject();
         ArrayList<String> ranks = new ArrayList<String>();
-        empObject.put("HID", rs.getString(i));
-        empObject.put("Username", rs.getString(i + 1));
-        empObject.put("FirstName", rs.getString(i + 2));
-        empObject.put("LastName", rs.getString(i + 3));
-        empObject.put("DOB", rs.getString(i + 4));
+        empObject.put("a_hashedID", rs.getString(i));
+        empObject.put("a_username", rs.getString(i + 1));
+        empObject.put("a_fname", rs.getString(i + 2));
+        empObject.put("a_lname", rs.getString(i + 3));
+        empObject.put("a_dob", rs.getString(i + 4));
         ranks.add(rs.getString(i + 5));
         ranks.add(rs.getString(i + 6));
         ranks.add(rs.getString(i + 7));
@@ -239,12 +238,11 @@ public class Employer {
         ranks.add(rs.getString(i + 11));
         ranks.add(rs.getString(i + 12));
         ranks.add(rs.getString(i + 13));
-        empObject.put("Rankings", ranks.toString());
-        fl.put(empObject);
+        empObject.put("a_rankings", ranks.toString());
         i += 14;
       }
     }
-    return fl;
+    return empObject;
   }
 
   public JSONArray browseApplicants() throws ClassNotFoundException, SQLException {
@@ -260,11 +258,11 @@ public class Employer {
       for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
         empObject = new JSONObject();
         ArrayList<String> ranks = new ArrayList<String>();
-        empObject.put("HID", rs.getString(i));
-        empObject.put("Username", rs.getString(i + 1));
-        empObject.put("FirstName", rs.getString(i + 2));
-        empObject.put("LastName", rs.getString(i + 3));
-        empObject.put("DOB", rs.getString(i + 4));
+        empObject.put("a_hashedID", rs.getString(i));
+        empObject.put("a_username", rs.getString(i + 1));
+        empObject.put("a_fname", rs.getString(i + 2));
+        empObject.put("a_lname", rs.getString(i + 3));
+        empObject.put("a_dob", rs.getString(i + 4));
         ranks.add(rs.getString(i + 5));
         ranks.add(rs.getString(i + 6));
         ranks.add(rs.getString(i + 7));
@@ -274,7 +272,7 @@ public class Employer {
         ranks.add(rs.getString(i + 11));
         ranks.add(rs.getString(i + 12));
         ranks.add(rs.getString(i + 13));
-        empObject.put("Rankings", ranks.toString());
+        empObject.put("a_rankings", ranks.toString());
         fl.put(empObject);
         i += 14;
       }
