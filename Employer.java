@@ -204,6 +204,17 @@ public class Employer {
     rs.close();
   }
 
+  public ResultSet viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
+    Class.forName(dbInfo.get(0));
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps = con.prepareStatement(
+        "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_hashedID = ?;");
+    ps.setString(1, a_hid);
+    ResultSet rs = ps.executeQuery();
+    return rs;
+  }
+
   public ResultSet browseApplicants() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
