@@ -28,7 +28,7 @@ public class Employer {
   private String lname;
   private java.sql.Date dob;
 
-  public Employer() {
+  public Employer() throws ClassNotFoundException, SQLException {
     this.hashedID = "123456";
     this.companyName = "Testudios";
     this.username = "Test";
@@ -42,6 +42,9 @@ public class Employer {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
+    String[] tempRankings = {"1", "1", "1", "1", "1", "1", "1", "1", "1"};
+    updateProfile(tempRankings);
   }
 
   public Employer(String hid) {
@@ -52,6 +55,7 @@ public class Employer {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
   }
 
   public Employer(String hid, String compName, String un, String first, String last,
@@ -69,6 +73,7 @@ public class Employer {
         "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
+    this.profileRankings = new ArrayList<String>();
   }
 
   public void createEmployer() throws ClassNotFoundException, SQLException {
