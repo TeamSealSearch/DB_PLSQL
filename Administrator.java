@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Administrator {
   private ArrayList<String> dbInfo;
@@ -148,7 +150,7 @@ public class Administrator {
     con.close();
   }
 
-  public ResultSet viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
+  public JSONArray viewApplicant(String a_hid) throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
@@ -156,20 +158,70 @@ public class Administrator {
         "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT WHERE a_hashedID = ?;");
     ps.setString(1, a_hid);
     ResultSet rs = ps.executeQuery();
-    return rs;
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        empObject = new JSONObject();
+        ArrayList<String> ranks = new ArrayList<String>();
+        empObject.put("HID", rs.getString(i));
+        empObject.put("Username", rs.getString(i + 1));
+        empObject.put("FirstName", rs.getString(i + 2));
+        empObject.put("LastName", rs.getString(i + 3));
+        empObject.put("DOB", rs.getString(i + 4));
+        ranks.add(rs.getString(i + 5));
+        ranks.add(rs.getString(i + 6));
+        ranks.add(rs.getString(i + 7));
+        ranks.add(rs.getString(i + 8));
+        ranks.add(rs.getString(i + 9));
+        ranks.add(rs.getString(i + 10));
+        ranks.add(rs.getString(i + 11));
+        ranks.add(rs.getString(i + 12));
+        ranks.add(rs.getString(i + 13));
+        empObject.put("Rankings", ranks.toString());
+        fl.put(empObject);
+        i += 14;
+      }
+    }
+    return fl;
   }
 
-  public ResultSet browseApplicants() throws ClassNotFoundException, SQLException {
+  public JSONArray browseApplicants() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps = con.prepareStatement(
         "SELECT a_hashedid, a_username, a_fname, a_lname, a_dob, a_tech_yearsofexp, a_tech_problemsolving, a_tech_degree, a_busi_jobtype, a_busi_growthopp, a_busi_companysize, a_cult_consistency, a_cult_communication, a_cult_leadership FROM APPLICANT;");
     ResultSet rs = ps.executeQuery();
-    return rs;
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        empObject = new JSONObject();
+        ArrayList<String> ranks = new ArrayList<String>();
+        empObject.put("HID", rs.getString(i));
+        empObject.put("Username", rs.getString(i + 1));
+        empObject.put("FirstName", rs.getString(i + 2));
+        empObject.put("LastName", rs.getString(i + 3));
+        empObject.put("DOB", rs.getString(i + 4));
+        ranks.add(rs.getString(i + 5));
+        ranks.add(rs.getString(i + 6));
+        ranks.add(rs.getString(i + 7));
+        ranks.add(rs.getString(i + 8));
+        ranks.add(rs.getString(i + 9));
+        ranks.add(rs.getString(i + 10));
+        ranks.add(rs.getString(i + 11));
+        ranks.add(rs.getString(i + 12));
+        ranks.add(rs.getString(i + 13));
+        empObject.put("Rankings", ranks.toString());
+        fl.put(empObject);
+        i += 14;
+      }
+    }
+    return fl;
   }
 
-  public ResultSet viewEmployer(String e_hid) throws ClassNotFoundException, SQLException {
+  public JSONArray viewEmployer(String e_hid) throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
@@ -177,17 +229,69 @@ public class Administrator {
         "SELECT e_hashedID, e_companyName, e_username, e_fname, e_lname, e_dob, e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER WHERE e_hashedID = ?;");
     ps.setString(1, e_hid);
     ResultSet rs = ps.executeQuery();
-    return rs;
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        empObject = new JSONObject();
+        ArrayList<String> ranks = new ArrayList<String>();
+        empObject.put("HID", rs.getString(i));
+        empObject.put("CompanyName", rs.getString(i + 1));
+        empObject.put("Username", rs.getString(i + 2));
+        empObject.put("FirstName", rs.getString(i + 3));
+        empObject.put("LastName", rs.getString(i + 4));
+        empObject.put("DOB", rs.getString(i + 5));
+        ranks.add(rs.getString(i + 6));
+        ranks.add(rs.getString(i + 7));
+        ranks.add(rs.getString(i + 8));
+        ranks.add(rs.getString(i + 9));
+        ranks.add(rs.getString(i + 10));
+        ranks.add(rs.getString(i + 11));
+        ranks.add(rs.getString(i + 12));
+        ranks.add(rs.getString(i + 13));
+        ranks.add(rs.getString(i + 14));
+        empObject.put("Rankings", ranks.toString());
+        fl.put(empObject);
+        i += 15;
+      }
+    }
+    return fl;
   }
 
-  public ResultSet browseEmployers() throws ClassNotFoundException, SQLException {
+  public JSONArray browseEmployers() throws ClassNotFoundException, SQLException {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps = con.prepareStatement(
         "SELECT e_hashedID, e_companyName, e_username, e_fname, e_lname, e_dob, e_tech_yearsofexp, e_tech_problemsolving, e_tech_degree, e_busi_jobtype, e_busi_growthopp, e_busi_companysize, e_cult_consistency, e_cult_communication, e_cult_leadership FROM EMPLOYER;");
     ResultSet rs = ps.executeQuery();
-    return rs;
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
+    while (rs.next()) {
+      for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+        empObject = new JSONObject();
+        ArrayList<String> ranks = new ArrayList<String>();
+        empObject.put("HID", rs.getString(i));
+        empObject.put("CompanyName", rs.getString(i + 1));
+        empObject.put("Username", rs.getString(i + 2));
+        empObject.put("FirstName", rs.getString(i + 3));
+        empObject.put("LastName", rs.getString(i + 4));
+        empObject.put("DOB", rs.getString(i + 5));
+        ranks.add(rs.getString(i + 6));
+        ranks.add(rs.getString(i + 7));
+        ranks.add(rs.getString(i + 8));
+        ranks.add(rs.getString(i + 9));
+        ranks.add(rs.getString(i + 10));
+        ranks.add(rs.getString(i + 11));
+        ranks.add(rs.getString(i + 12));
+        ranks.add(rs.getString(i + 13));
+        ranks.add(rs.getString(i + 14));
+        empObject.put("Rankings", ranks.toString());
+        fl.put(empObject);
+        i += 15;
+      }
+    }
+    return fl;
   }
 
   public void deleteApplicant(String a_hid) throws ClassNotFoundException, SQLException {
@@ -275,30 +379,16 @@ public class Administrator {
     admin.createAdmin();
     Calendar cal = Calendar.getInstance();
     admin.createApplicant("aca1234", "Generico", "Bob", "Stevens", cal);
-    ResultSet test1 = admin.viewApplicant("aca1234");
-    ArrayList<String> applicants = new ArrayList<String>();
-    while (test1.next()) {
-      for (int i = 1; i <= test1.getMetaData().getColumnCount(); i++) {
-        applicants.add(test1.getString(i));
-      }
-    }
-    test1.close();
+    JSONArray test1 = admin.viewApplicant("aca1234");
     System.out.println("Looping Thru Applicant Result Set Now!");
-    for (int i = 0; i < applicants.size(); i++) {
-      System.out.println(applicants.get(i));
+    for (int i = 0; i < test1.length(); i++) {
+      System.out.println(test1.get(i).toString());
     }
     admin.createEmployer("ace0001", "Overwatch", "Tigole", "Jeff", "Kaplan", cal);
-    ResultSet test2 = admin.viewEmployer("ace0001");
-    ArrayList<String> jobs = new ArrayList<String>();
-    while (test2.next()) {
-      for (int i = 1; i <= test2.getMetaData().getColumnCount(); i++) {
-        jobs.add(test2.getString(i));
-      }
-    }
-    test2.close();
     System.out.println("Looping Thru Employer Result Set Now!");
-    for (int i = 0; i < jobs.size(); i++) {
-      System.out.println(jobs.get(i));
+    JSONArray test2 = admin.viewEmployer("ace0001");
+    for (int i = 0; i < test2.length(); i++) {
+      System.out.println(test2.get(i).toString());
     }
     admin.deleteApplicant("aca1234");
     admin.deleteEmployer("ace0001");
