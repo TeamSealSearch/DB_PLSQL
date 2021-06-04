@@ -92,7 +92,6 @@ public class Administrator {
     newEmp.createEmployer();
   }
 
-
   public void retrieveResume(String a_hid)
       throws ClassNotFoundException, IOException, SQLException {
     Class.forName(dbInfo.get(0));

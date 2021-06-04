@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Applicant {
   private ArrayList<String> dbInfo;
@@ -241,14 +243,22 @@ public class Applicant {
     Class.forName(dbInfo.get(0));
     Connection con =
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
-    StringBuilder fe = new StringBuilder();
+    JSONArray fl = new JSONArray();
+    JSONObject empObject;
     PreparedStatement ps =
         con.prepareStatement("UPDATE APPLICANT SET a_followedEmployers = ? WHERE a_hashedID = ?;");
     for (Employer value : this.followedEmps.values()) {
-      fe.append(value.getHashedID() + " , ");
+      empObject = new JSONObject();
+      empObject.put("HID", value.getHashedID());
+      empObject.put("CompanyName", value.getCompanyName());
+      empObject.put("Username", value.getUsername());
+      empObject.put("FirstName", value.getFirstName());
+      empObject.put("LastName", value.getLastName());
+      empObject.put("DOB", value.getDOB());
+      empObject.put("Rankings", value.getProfileRankings().toString());
+      fl.put(empObject);
     }
-    fe.delete(fe.length() - 3, fe.length());
-    ps.setString(1, fe.toString());
+    ps.setString(1, fl.toString());
     ps.setString(2, this.hashedID);
     int count = ps.executeUpdate();
     System.out.println("Rows Affected By updateFollowedList() Query = " + count);
