@@ -43,7 +43,7 @@ public class Applicant {
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
         "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
-    this.dbInfo.add("kingSeal@sealsearch");
+    this.dbInfo.add("KingSeal@thesealsearchserver");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
     String[] tempRankings = {"1", "1", "1", "1", "1", "1", "1", "1", "1"};
@@ -57,7 +57,7 @@ public class Applicant {
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
         "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
-    this.dbInfo.add("kingSeal@sealsearch");
+    this.dbInfo.add("KingSeal@thesealsearchserver");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
     this.followedEmps = new HashMap<>();
@@ -75,7 +75,7 @@ public class Applicant {
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
         "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
-    this.dbInfo.add("kingSeal@sealsearch");
+    this.dbInfo.add("KingSeal@thesealsearchserver");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
     this.followedEmps = new HashMap<>();
