@@ -41,7 +41,7 @@ public class Employer {
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
-        "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+        "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
@@ -54,7 +54,7 @@ public class Employer {
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
-        "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+        "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
@@ -72,7 +72,7 @@ public class Employer {
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
-        "jdbc:mysql://sealsearch.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
+        "jdbc:mysql://thesealsearchserver.mysql.database.azure.com:3306/sealdb?useSSL=true&requireSSL=false");
     this.dbInfo.add("kingSeal@sealsearch");
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
