@@ -1,4 +1,4 @@
-### DB_MYSQL
+### MYSQLDB & JAVA
 ![*WORK IN PROGRESS*](https://mlc3enqihfxh.i.optimole.com/-oReiFg-YQPzv3IV/w:184/h:184/q:auto/https://i0.wp.com/amandaalianell.com/wp-content/uploads/2019/09/awkward-moment-seal-meme.png)<br/>
 ***
 ### Microsoft Azure
