@@ -83,8 +83,10 @@ public class Administrator {
   }
 
   public void createApplicant(String a_hid, String a_un, String a_first, String a_last,
-      Calendar a_dobCal) throws ClassNotFoundException, SQLException {
-    Applicant newApp = new Applicant(a_hid, a_un, a_first, a_last, a_dobCal);
+      Calendar a_dobCal, String city, String state, String phoneNumber, String email)
+      throws ClassNotFoundException, SQLException {
+    Applicant newApp =
+        new Applicant(a_hid, a_un, a_first, a_last, a_dobCal, city, state, phoneNumber, email);
     newApp.createApplicant();
   }
 
@@ -374,7 +376,8 @@ public class Administrator {
     System.out.println(admin.toString());
     admin.createAdmin();
     Calendar cal = Calendar.getInstance();
-    admin.createApplicant("aca1234", "Generico", "Bob", "Stevens", cal);
+    admin.createApplicant("aca1234", "Generico", "Bob", "Stevens", cal, "Chicago", "Illinois",
+        "(123)456-7890", "myEmail@email.com");
     System.out.println("\n");
     JSONObject test1 = admin.viewApplicant("aca1234");
     System.out.println("Printing Applicant JSONObject:");
