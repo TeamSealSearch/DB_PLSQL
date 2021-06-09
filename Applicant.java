@@ -31,6 +31,10 @@ public class Applicant {
   private String fname;
   private String lname;
   private java.sql.Date dob;
+  private String city;
+  private String state;
+  private String phoneNumber;
+  private String email;
 
   public Applicant() throws ClassNotFoundException, SQLException {
     this.hashedID = "123456";
@@ -49,6 +53,10 @@ public class Applicant {
     String[] tempRankings = {"1", "1", "1", "1", "1", "1", "1", "1", "1"};
     updateProfile(tempRankings);
     this.followedEmps = new HashMap<>();
+    this.city = "Chicago";
+    this.state = "Illinois";
+    this.phoneNumber = "(123)456-7890";
+    this.email = "myEmail@email.com";
   }
 
   public Applicant(String hid) throws ClassNotFoundException, SQLException {
@@ -61,16 +69,24 @@ public class Applicant {
     this.dbInfo.add("Password1");
     this.profileRankings = new ArrayList<String>();
     this.followedEmps = new HashMap<>();
+    this.city = "Chicago";
+    this.state = "Illinois";
+    this.phoneNumber = "(123)456-7890";
+    this.email = "myEmail@email.com";
   }
 
-  public Applicant(String hid, String un, String first, String last, Calendar dobCal)
-      throws ClassNotFoundException, SQLException {
+  public Applicant(String hid, String un, String first, String last, Calendar dobCal, String a_city,
+      String a_state, String a_number, String a_email) throws ClassNotFoundException, SQLException {
     this.hashedID = hid;
     this.username = un;
     this.fname = first;
     this.lname = last;
     Calendar cal = dobCal;
     this.dob = new java.sql.Date(cal.getTimeInMillis());
+    this.city = a_city;
+    this.state = a_state;
+    this.phoneNumber = a_number;
+    this.email = a_email;
     this.dbInfo = new ArrayList<String>();
     this.dbInfo.add("com.mysql.cj.jdbc.Driver");
     this.dbInfo.add(
@@ -110,6 +126,27 @@ public class Applicant {
         DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
     PreparedStatement ps =
         con.prepareStatement("UPDATE APPLICANT SET a_resumePDF = ? WHERE a_hashedID = ?;");
+    ps.setBytes(1, pdfData);
+    ps.setString(2, this.hashedID);
+    int count = ps.executeUpdate();
+    System.out.println("Rows Affected By uploadResume() Query = " + count);
+    con.close();
+    ps.close();
+  }
+
+  public void uploadProfPic(String filepath)
+      throws ClassNotFoundException, IOException, SQLException {
+    Class.forName(dbInfo.get(0));
+    String fp = filepath;
+    File pdfFile = new File(fp);
+    byte[] pdfData = new byte[(int) pdfFile.length()];
+    DataInputStream dis = new DataInputStream(new FileInputStream(pdfFile));
+    dis.readFully(pdfData);
+    dis.close();
+    Connection con =
+        DriverManager.getConnection(this.dbInfo.get(1), this.dbInfo.get(2), this.dbInfo.get(3));
+    PreparedStatement ps =
+        con.prepareStatement("UPDATE APPLICANT SET a_profilePicture = ? WHERE a_hashedID = ?;");
     ps.setBytes(1, pdfData);
     ps.setString(2, this.hashedID);
     int count = ps.executeUpdate();
@@ -352,6 +389,22 @@ public class Applicant {
     this.dob = new java.sql.Date(cal.getTimeInMillis());
   }
 
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public void setPhoneNumber(String number) {
+    this.phoneNumber = number;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   public ArrayList<String> getDBInfo() {
     return this.dbInfo;
   }
@@ -384,6 +437,22 @@ public class Applicant {
     return this.dob;
   }
 
+  public String getCity() {
+    return this.city;
+  }
+
+  public String getState() {
+    return this.state;
+  }
+
+  public String getPhoneNumber() {
+    return this.phoneNumber;
+  }
+
+  public String getEmail() {
+    return this.email;
+  }
+
   public static void main(String[] args)
       throws ClassNotFoundException, IOException, ParseException, SQLException {
     Applicant appDefault = new Applicant();
@@ -413,6 +482,7 @@ public class Applicant {
     String[] rankings2 = {"100", "101", "102", "103", "104", "105", "106", "107", "108"};
     appSetTest.createApplicant();
     appSetTest.uploadResume("C:/Users/Jeremy/Desktop/captain.pdf");
+    appSetTest.uploadProfPic("C:/Users/Jeremy/Desktop/captain.pdf");
     appSetTest.updateProfile(rankings2);
     appSetTest.retrieveResume();
     System.out.println("\n" + appSetTest.toString() + "\n");
